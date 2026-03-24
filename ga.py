@@ -7,7 +7,7 @@ def fitness(board):
     for i in range(n):
         for j in range(i+1,n):
             if board[i]==board[j]:
-                conflict+=1
+                conflicts+=1
             elif(abs(board[i]-board[j])==abs(i-j)):
                 conflicts+=1
     return conflicts
@@ -53,7 +53,7 @@ def solve_n_queens(n,population_size=100,generations=1000):
 
         next_gen=[]
 
-        while(len(next_gen)>population_size):
+        while(len(next_gen)<population_size):
             p1=random.choice(selected)
             p2=random.choice(selected)
 
