@@ -1,11 +1,29 @@
 import pygame
-
+from ga import fitness
 pygame.init()
 
 WIDTH=600
 HEIGHT=600
 screen=pygame.display.set_mode((WIDTH,HEIGHT))
 pygame.display.set_caption("N Queens Visualiser")
+
+def is_attacked(board, col):
+    row = board[col]
+    n = len(board)
+
+    for c in range(n):
+        if c == col:
+            continue
+
+        r = board[c]
+
+        if r == row:
+            return True
+
+        if abs(r - row) == abs(c - col):
+            return True
+
+    return False
 
 def draw_board(n):
     block_size=WIDTH//n
@@ -22,9 +40,11 @@ def draw_queens(board):
     for col,row in enumerate(board):
         x=col*block_size+block_size//2
         y=row*block_size+block_size//2
-
-        pygame.draw.circle(screen,(0,255,0),(x,y),block_size//3)
-
+        if(is_attacked(board,col)):
+            pygame.draw.circle(screen,(255,0,0),(x,y),block_size//3)
+        else:
+            pygame.draw.circle(screen,(0,255,0),(x,y),block_size//3)
+"""
 def visualiser(board):
     n=len(board)
     running=True
@@ -40,4 +60,37 @@ def visualiser(board):
             if event.type==pygame.QUIT:
                 running=False
     pygame.quit()
+"""
 
+def visulaiser(data):
+    running=True
+    index=0
+    clock=pygame.time.Clock()
+    solved=False
+
+    while(running):
+        screen.fill((0,0,0))
+        current=data[index]
+        if(isinstance(current,list)):
+            board=current[0]
+        else:
+            board=current
+        n=len(board)
+
+        draw_board(n)
+        draw_queens(board)
+
+        if(fitness(board)==0):
+            solved=True
+        
+        pygame.display.update()
+
+        if not solved:
+            index=(index+1)%len(data)
+        
+        clock.tick(5)
+
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                running=False
+    pygame.quit()
